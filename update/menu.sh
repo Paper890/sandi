@@ -1,10 +1,12 @@
 #!/bin/bash
 # =========================================
-UPDATE="https://raw.githubusercontent.com/Paper890/sandi/main/update/update.sh"
+UPDATE="https://raw.githubusercontent.com/Paper890/mysc/main/update/update.sh"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-clear
-
+ipsaya=$(wget -qO- ipinfo.io/ip)
+ISP=$(curl -s ipinfo.io/org | cut -d " " -f 2-10 )
+CITY=$(curl -s ipinfo.io/city )
+MYIP=$(curl -sS ipv4.icanhazip.com)
 # =========================================
 vlx=$(grep -c -E "^#& " "/etc/xray/config.json")
 let vla=$vlx/2
@@ -128,7 +130,7 @@ echo -e "${CYAN}  • Server IP${NC}         =${YELLOW} ${ipsaya} ${NC}"
 echo -e "${CYAN}  • ISP-VPS${NC}           =${YELLOW} ${ISP} ${NC}"
 echo -e "${CYAN}  • City${NC}              =${YELLOW} ${CITY} ${NC}"
 echo -e "${CYAN}  • Clients Name${NC}      =${LIGHT} Power Rangger Merah ${NC}"
-echo -e "${CYAN}  • Script Exfire${NC}     =${RED} $Lifetime ${NC}"
+echo -e "${CYAN}  • Script Exfire${NC}     =${RED} Lifetime ${NC}"
 echo -e "${GREEN}┌─────────────────────────────────────────────────────┐${NC}"
 echo -e "${CYAN}                .::: PAPER TUNNEL :::.               ${NC}     "
 echo -e "${GREEN}└─────────────────────────────────────────────────────┘${NC}"

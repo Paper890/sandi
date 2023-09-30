@@ -1,6 +1,6 @@
 #!/bin/bash
 # =========================================
-UPDATE="https://raw.githubusercontent.com/Paper890/mysc/main/update/update.sh"
+UPDATE="https://raw.githubusercontent.com/Paper890/sandi/main/update/update.sh"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 ipsaya=$(wget -qO- ipinfo.io/ip)

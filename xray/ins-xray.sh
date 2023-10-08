@@ -95,50 +95,30 @@ mkdir -p /home/vps/public_html
 uuid=$(cat /proc/sys/kernel/random/uuid)
 # xray config
 cat > /etc/xray/config.json << END
-  {
-  "log": {
-    "loglevel": "warning",
+{
+  "log" : {
+    "access": "/var/log/xray/access.log",
     "error": "/var/log/xray/error.log",
-    "access": "/var/log/xray/access.log"
-   },
-   "api": {
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-     ],
-    "tag": "api"
-    },
-    "stats": {},
-    "policy": {
-    "levels": {
-      "0": {
-        "handshake": 2,
-        "connIdle": 128,
-        "statsUserUplink": true,
-        "statsUserDownlink": true
-        }
-       }
-      },
-      "inbounds": [
+    "loglevel": "warning"
+  },
+  "inbounds": [
       {
       "listen": "127.0.0.1",
-      "port": 10000,
+      "port": 10085,
       "protocol": "dokodemo-door",
       "settings": {
         "address": "127.0.0.1"
       },
       "tag": "api"
-      },
-      {
-     "listen": "127.0.0.1",
-     "port": "10001",
+    },
+   {
+     "listen": "/run/xray/vless_ws.sock",
      "protocol": "vless",
       "settings": {
           "decryption":"none",
             "clients": [
                {
-                 "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+                 "id": "${uuid}"                 
 #vless
              }
           ]
@@ -146,18 +126,17 @@ cat > /etc/xray/config.json << END
        "streamSettings":{
          "network": "ws",
             "wsSettings": {
-                "path": "/vless"
+                "path": "/vlessws"
           }
         }
      },
      {
-     "listen": "127.0.0.1",
-     "port": "10002",
+     "listen": "/run/xray/vmess_ws.sock",
      "protocol": "vmess",
       "settings": {
             "clients": [
                {
-                 "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0",
+                 "id": "${uuid}",
                  "alterId": 0
 #vmess
              }
@@ -167,18 +146,17 @@ cat > /etc/xray/config.json << END
          "network": "ws",
             "wsSettings": {
                 "path": "/vmess"
-           }
-         }
-       },
-       {
-      "listen": "127.0.0.1",
-      "port": "10003",
+          }
+        }
+     },
+    {
+      "listen": "/run/xray/trojan_ws.sock",
       "protocol": "trojan",
       "settings": {
-          "decryption":"none",
+          "decryption":"none",		
            "clients": [
               {
-                 "password": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+                 "password": "${uuid}"
 #trojanws
               }
           ],
@@ -191,15 +169,15 @@ cat > /etc/xray/config.json << END
             }
          }
      },
-      {
+    {
          "listen": "127.0.0.1",
-        "port": "10004",
+        "port": "30300",
         "protocol": "shadowsocks",
         "settings": {
            "clients": [
            {
            "method": "aes-128-gcm",
-          "password": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+          "password": "${uuid}"
 #ssws
            }
           ],
@@ -211,16 +189,15 @@ cat > /etc/xray/config.json << END
                "path": "/ss-ws"
            }
         }
-     },
+     },	
       {
-        "listen": "127.0.0.1",
-        "port": "10005",
+        "listen": "/run/xray/vless_grpc.sock",
         "protocol": "vless",
         "settings": {
          "decryption":"none",
            "clients": [
              {
-               "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+               "id": "${uuid}"
 #vlessgrpc
              }
           ]
@@ -233,13 +210,12 @@ cat > /etc/xray/config.json << END
         }
      },
      {
-      "listen": "127.0.0.1",
-      "port": "10006",
+      "listen": "/run/xray/vmess_grpc.sock",
      "protocol": "vmess",
       "settings": {
             "clients": [
                {
-                 "id": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0",
+                 "id": "${uuid}",
                  "alterId": 0
 #vmessgrpc
              }
@@ -253,14 +229,13 @@ cat > /etc/xray/config.json << END
         }
      },
      {
-        "listen": "127.0.0.1",
-        "port": "10007",
+        "listen": "/run/xray/trojan_grpc.sock",
         "protocol": "trojan",
         "settings": {
           "decryption":"none",
              "clients": [
                {
-                 "password": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
+                 "password": "${uuid}"
 #trojangrpc
                }
            ]
@@ -274,14 +249,14 @@ cat > /etc/xray/config.json << END
    },
    {
     "listen": "127.0.0.1",
-    "port": "10008",
+    "port": "30310",
     "protocol": "shadowsocks",
     "settings": {
         "clients": [
           {
              "method": "aes-128-gcm",
-             "password": "1d1c1d94-6987-4658-a4dc-8821a30fe7e0"
-#ssgrpc 
+             "password": "${uuid}"
+#ssgrpc
            }
          ],
            "network": "tcp,udp"
@@ -292,7 +267,7 @@ cat > /etc/xray/config.json << END
            "serviceName": "ss-grpc"
           }
        }
-    }
+    }	
   ],
   "outbounds": [
     {
@@ -306,34 +281,26 @@ cat > /etc/xray/config.json << END
     }
   ],
   "routing": {
-    "domainStrategy": "AsIs",
     "rules": [
       {
-        "inboundTag": [
-          "dnsIn"
-        ],
-        "outboundTag": "dnsOut",
-        "type": "field"
-      },
-      {
-        "inboundTag": [
-          "dnsQuery"
-        ],
-        "outboundTag": "direct",
-        "type": "field"
-      },
-      {
-        "outboundTag": "direct",
-        "protocol": [
-          "bittorrent"
-        ],
-        "type": "field"
-      },
-      {
         "type": "field",
-        "outboundTag": "block",       
         "ip": [
-          "0.0.0.0/8", "10.0.0.0/8", "100.64.0.0/10", "169.254.0.0/16", "172.16.0.0/12", "192.0.0.0/24", "192.0.2.0/24", "192.168.0.0/16", "198.18.0.0/15", "198.51.100.0/24", "203.0.113.0/24", "::1/128", "fc00::/7", "fe80::/10"]
+          "0.0.0.0/8",
+          "10.0.0.0/8",
+          "100.64.0.0/10",
+          "169.254.0.0/16",
+          "172.16.0.0/12",
+          "192.0.0.0/24",
+          "192.0.2.0/24",
+          "192.168.0.0/16",
+          "198.18.0.0/15",
+          "198.51.100.0/24",
+          "203.0.113.0/24",
+          "::1/128",
+          "fc00::/7",
+          "fe80::/10"
+        ],
+        "outboundTag": "blocked"
       },
       {
         "inboundTag": [
@@ -348,34 +315,7 @@ cat > /etc/xray/config.json << END
         "protocol": [
           "bittorrent"
         ]
-      },
-      {
-        "type": "field",
-        "outboundTag": "proxy",
-        "ip": ["1.1.1.1/32", "1.0.0.1/32",
-          "8.8.8.8/32", "8.8.4.4/32", "geoip:us", "geoip:ca", "geoip:cloudflare", "geoip:cloudfront", "geoip:facebook", "geoip:fastly", "geoip:google", "geoip:netflix", "geoip:telegram", "geoip:yt", "geoip:twitter"]
-      },
-      {
-        "type": "field",
-        "outboundTag": "block",       
-        "ip": [
-          "0.0.0.0/8", "10.0.0.0/8", "100.64.0.0/10", "169.254.0.0/16", "172.16.0.0/12", "192.0.0.0/24", "192.0.2.0/24", "192.168.0.0/16", "198.18.0.0/15", "198.51.100.0/24", "203.0.113.0/24", "::1/128", "fc00::/7", "fe80::/10"]
-      },
-      {
-        "type": "field",
-        "outboundTag": "direct",
-        "ip": ["223.5.5.5/32", "119.29.29.29/32", "180.76.76.76/32", "114.114.114.114/32", "geoip:cn", "geoip:jp", "geoip:in", "geoip:private"]
-      },
-      {
-        "type": "field",
-        "outboundTag": "reject",
-        "domain": ["geosite:category-ads-all"]
-      },
-      {
-        "type": "field",
-        "outboundTag": "direct",
-        "network": "tcp,udp"
-      } 
+      }
     ]
   },
   "stats": {},
@@ -397,36 +337,9 @@ cat > /etc/xray/config.json << END
       "statsInboundDownlink": true,
       "statsOutboundUplink" : true,
       "statsOutboundDownlink" : true
-     }
-    },
-    "dns": {
-      "hosts": {
-        "dns.google": "8.8.8.8",
-        "dns.pub": "119.29.29.29",
-        "dns.alidns.com": "223.5.5.5",
-        "geosite:category-ads-all": "127.0.0.1"
-      },
-      "servers": [
-        {
-          "address": "https://1.1.1.1/dns-query",
-          "domains": ["geosite:geolocation-!cn"],
-          "expectIPs": ["geoip:!cn"]
-        },
-        "8.8.8.8",
-        {
-          "address": "114.114.114.114",
-          "port": 53,
-          "domains": ["geosite:cn", "geosite:category-games@cn"],
-          "expectIPs": ["geoip:cn"],
-          "skipFallback": true
-        },
-        {
-          "address": "localhost",
-          "skipFallback": true
-        }
-       ]
-      }
     }
+  }
+}
 END
 rm -rf /etc/systemd/system/xray.service.d
 cat <<EOF> /etc/systemd/system/xray.service
@@ -465,224 +378,119 @@ EOF
 
 #nginx config
 cat >/etc/nginx/conf.d/xray.conf <<EOF
-server {
-    listen 1010 proxy_protocol so_keepalive=on reuseport;
-    set_real_ip_from 127.0.0.1;
-    real_ip_header  proxy_protocol;
-    server_name xxx;
-    client_body_buffer_size 200K;
-    client_header_buffer_size 2k;
-    client_max_body_size 10M;
-    large_client_header_buffers 3 1k;
-    client_header_timeout 86400000m;
-    keepalive_timeout 86400000m;
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-XSS-Protection "1; mode=block";
+    server {
+             listen 80;
+             listen [::]:80;
+             listen 443 ssl http2 reuseport;
+             listen [::]:443 http2 reuseport;	
+             server_name $domain;
+             ssl_certificate /etc/xray/xray.crt;
+             ssl_certificate_key /etc/xray/xray.key;
+             ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+             ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+             root /home/vps/public_html;
+        }
+EOF
+sed -i '$ ilocation = /vlessws' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_pass http://unix:/run/xray/vless_ws.sock;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_http_version 1.1;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Upgrade \$http_upgrade;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Connection "upgrade";' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
 
-    location ~ /vless {
-    if ($http_upgrade != "Websocket") {
-    rewrite /(.*) /vless break;
-    }
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10001;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $http_x_forwarded_for;
-    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-    location ~ /vmess {
-    if ($http_upgrade != "Websocket") {
-    rewrite /(.*) /vmess break;
-    }
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10002;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $http_x_forwarded_for;
-    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
-  } 
-    location ~ /trojan-ws {
-    if ($http_upgrade != "Websocket") {
-    rewrite /(.*) /trojan-ws break;
-    }
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10003;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $http_x_forwarded_for;
-    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-    location ~ /ss-ws {
-    if ($http_upgrade != "Websocket") {
-    rewrite /(.*) /ss-ws break;
-    }
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10004;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $http_x_forwarded_for;
-    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-    location ~ / {
-    if ($http_upgrade != "Websocket") {
-    rewrite /(.*) /sshws break;
-    }
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10015;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $http_x_forwarded_for;
-    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-}
-server {
-    listen 1012 proxy_protocol so_keepalive=on reuseport;
-    client_body_buffer_size 200K;
-    client_header_buffer_size 2k;
-    client_max_body_size 10M;
-    large_client_header_buffers 3 1k;
-    client_header_timeout 86400000m;
-    keepalive_timeout 86400000m;
-    server_name xxx;
+sed -i '$ ilocation = /vmess' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_pass http://unix:/run/xray/vmess_ws.sock;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_http_version 1.1;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Upgrade \$http_upgrade;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Connection "upgrade";' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
 
-    location ~ / {
-    if ($http_upgrade != "Websocket") {
-    rewrite /(.*) /wsovpn break;
-    }
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10012;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $http_x_forwarded_for;
-    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-}
-server {
-    listen 81 ssl http2 reuseport;
-    ssl_certificate /etc/xray/xray.crt;
-    ssl_certificate_key /etc/xray/xray.key;
-    ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
-    ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
-    root /var/www/html;
-}
-server {
-    listen 1013 http2 proxy_protocol so_keepalive=on reuseport;
-    client_body_buffer_size 200K;
-    client_header_buffer_size 2k;
-    client_max_body_size 10M;
-    large_client_header_buffers 3 1k;
-    client_header_timeout 86400000m;
-    keepalive_timeout 86400000m;
-    server_name xxx;
-    location ~ /vless-grpc {
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    grpc_set_header Host $host;
-    grpc_pass grpc://127.0.0.1:10005;
-    grpc_set_header X-Real-IP $http_x_forwarded_for;
-    grpc_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-    location ~ /vmess-grpc {
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    grpc_set_header Host $host;
-    grpc_pass grpc://127.0.0.1:10006;
-    grpc_set_header X-Real-IP $http_x_forwarded_for;
-    grpc_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-    location ~ /trojan-grpc {
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    grpc_set_header Host $host;
-    grpc_pass grpc://127.0.0.1:10007;
-    grpc_set_header X-Real-IP $http_x_forwarded_for;
-    grpc_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-    location ~ /ss-grpc {
-    add_header X-HTTP-LEVEL-HEADER 1;
-    add_header X-ANOTHER-HTTP-LEVEL-HEADER 1;
-    add_header X-SERVER-LEVEL-HEADER 1;
-    add_header X-LOCATION-LEVEL-HEADER 1;
-    proxy_headers_hash_max_size 512;
-    proxy_headers_hash_bucket_size 128;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    grpc_set_header Host $host;
-    grpc_pass grpc://127.0.0.1:10008;
-    grpc_set_header X-Real-IP $http_x_forwarded_for;
-    grpc_set_header X-Forwarded-For $http_x_forwarded_for;
-  }
-}
+sed -i '$ ilocation = /trojan-ws' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_pass http://unix:/run/xray/trojan_ws.sock;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_http_version 1.1;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Upgrade \$http_upgrade;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Connection "upgrade";' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
+
+sed -i '$ ilocation = /ss-ws' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_pass http://127.0.0.1:30300;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_http_version 1.1;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Upgrade \$http_upgrade;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Connection "upgrade";' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
+
+sed -i '$ ilocation /' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_pass http://127.0.0.1:700;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_http_version 1.1;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Upgrade \$http_upgrade;' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Connection "upgrade";' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
+
+sed -i '$ ilocation ^~ /vless-grpc' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_pass grpc://unix:/run/xray/vless_grpc.sock;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
+
+sed -i '$ ilocation ^~ /vmess-grpc' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_pass grpc://unix:/run/xray/vmess_grpc.sock;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
+
+sed -i '$ ilocation ^~ /trojan-grpc' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_pass grpc://unix:/run/xray/trojan_grpc.sock;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
+
+sed -i '$ ilocation ^~ /ss-grpc' /etc/nginx/conf.d/xray.conf
+sed -i '$ i{' /etc/nginx/conf.d/xray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Real-IP \$remote_addr;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_set_header Host \$http_host;' /etc/nginx/conf.d/xray.conf
+sed -i '$ igrpc_pass grpc://127.0.0.1:30310;' /etc/nginx/conf.d/xray.conf
+sed -i '$ i}' /etc/nginx/conf.d/xray.conf
+
+
 sleep 1
 echo -e "[ ${green}INFO$NC ] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Paper890/sandi/main/ssh/bbr.sh"
+wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Paper890/mysc/main/ssh/bbr.sh"
 chmod +x /usr/bin/bbr
 bbr >/dev/null 2>&1
 rm /usr/bin/bbr >/dev/null 2>&1
@@ -697,8 +505,8 @@ systemctl enable runn
 systemctl restart runn
 
 sleep 1
-wget -q -O /usr/bin/auto-set "https://raw.githubusercontent.com/Paper890/sandi/main/xray/auto-set.sh" && chmod +x /usr/bin/auto-set 
-wget -q -O /usr/bin/crtxray "https://raw.githubusercontent.com/Paper890/sandi/main/xray/crt.sh" && chmod +x /usr/bin/crtxray 
+wget -q -O /usr/bin/auto-set "https://raw.githubusercontent.com/Paper890/mysc/main/xray/auto-set.sh" && chmod +x /usr/bin/auto-set 
+wget -q -O /usr/bin/crtxray "https://raw.githubusercontent.com/Paper890/mysc/main/xray/crt.sh" && chmod +x /usr/bin/crtxray 
 sleep 1
 yellow() { echo -e "\\033[33;1m${*}\\033[0m"; }
 yellow "xray/Vmess"

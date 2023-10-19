@@ -147,7 +147,7 @@ echo -e "${CYAN}    ${YELLOW}3.${NC} ${CYAN}VLESS MANAGER${NC}            ${YELL
 echo -e "${CYAN}    ${YELLOW}4.${NC} ${CYAN}TROJAN MANAGER${NC}           ${YELLOW}9.${NC} ${CYAN}ADD HOST/DOMAIN   ${NC} "
 echo -e "${CYAN}    ${YELLOW}5.${NC} ${CYAN}SHODOWSOK MANAGER${NC}       ${YELLOW}10.${NC} ${CYAN}INSTALL UDP  ${NC} "
 echo -e "${GREEN}┌─────────────────────────────────────────────────────┐${NC}"
-echo -e "${CYAN}                 .::: AUTOSCRIPT SIMPLE:::.                    ${NC} "
+echo -e "${CYAN}              .::: AUTOSCRIPT SIMPLE :::.                    ${NC} "
 echo -e "${GREEN}└─────────────────────────────────────────────────────┘${NC}"
 echo ""
 echo -ne " Select menu : "; read opt

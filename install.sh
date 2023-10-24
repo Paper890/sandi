@@ -218,6 +218,7 @@ echo -e "$green[INFO]$NC Install SSH"
 sleep 2
 clear
 wget https://raw.githubusercontent.com/Paper890/sandi/main/ssh/ssh-vpn.sh && chmod +x ssh-vpn.sh && ./ssh-vpn.sh
+wget https://raw.githubusercontent.com/Paper890/sandi/main/ssh/Udp-custom.sh && chmod +x Udp-custom.sh && ./Udp-custom.sh
 #Instal Xray
 echo -e "$green[INFO]$NC Install XRAY!"
 sleep 2

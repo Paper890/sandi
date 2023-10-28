@@ -14,7 +14,6 @@ wget -q -O /usr/bin/menu-set "https://raw.githubusercontent.com/Paper890/sandi/m
 wget -q -O /usr/bin/menu-backup "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-backup.sh" && chmod +x /usr/bin/menu-backup
 wget -q -O /usr/bin/menu-ip "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-ip.sh" && chmod +x /usr/bin/menu-ip
 wget -q -O /usr/bin/menu-tor "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-tor.sh" && chmod +x /usr/bin/menu-tor
-wget -q -O /usr/bin/auto-reboot "https://raw.githubusercontent.com/Paper890/sandi/main/update/auto-reboot.sh" && chmod +x /usr/bin/auto-reboot
 wget -q -O /usr/bin/menu-tcp "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-tcp.sh" && chmod +x /usr/bin/menu-tcp
 wget -q -O /usr/bin/menu-dns "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-dns.sh" && chmod +x /usr/bin/menu-dns
 wget -q -O /usr/bin/info "https://raw.githubusercontent.com/Paper890/sandi/main/update/info.sh" && chmod +x /usr/bin/info

@@ -209,14 +209,14 @@ clear
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
 echo -e " ${COLBG1}  • CREATE TROJAN USER •    ${NC} " 
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
-echo -e "$COLOR1 ${NC} Remarks     : ${user}"  >> nama_file.txt
-echo -e "$COLOR1 ${NC} Expired On  : $exp"  >> nama_file.txt
-echo -e "$COLOR1 ${NC} Host/IP     : ${domain}"  >> nama_file.txt
-echo -e "$COLOR1 ${NC} Port        : ${tr}"  >> nama_file.txt
-echo -e "$COLOR1 ${NC} Key         : ${uuid}"  >> nama_file.txt
-echo -e "$COLOR1 ${NC} Path        : /trojan-ws"  >> nama_file.txt
-echo -e "$COLOR1 ${NC} Path WSS    : wss://bug.com/trojan-ws"  >> nama_file.txt
-echo -e "$COLOR1 ${NC} ServiceName : trojan-grpc"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} Remarks     : ${user}"  >> "${user}.txt"
+echo -e "$COLOR1 ${NC} Expired On  : $exp"  >> "${user}.txt"
+echo -e "$COLOR1 ${NC} Host/IP     : ${domain}"  >> "${user}.txt"
+echo -e "$COLOR1 ${NC} Port        : ${tr}"  >> "${user}.txt"
+echo -e "$COLOR1 ${NC} Key         : ${uuid}"  >> "${user}.txt"
+echo -e "$COLOR1 ${NC} Path        : /trojan-ws"  >> "${user}.txt"
+echo -e "$COLOR1 ${NC} Path WSS    : wss://bug.com/trojan-ws"  >> "${user}.txt"
+echo -e "$COLOR1 ${NC} ServiceName : trojan-grpc"  >> "${user}.txt"
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
 echo -e "$COLOR1 ${NC} Link WS : " 
 echo -e "$COLOR1 ${NC} ${trojanlink}"  

@@ -206,9 +206,6 @@ trojanlink="trojan://${uuid}@bug.com:${tr}?path=%2Ftrojan-ws&security=tls&host=$
 
 
 clear
-output_file="${user}_trojan_setup_info.txt"
-
-cat <<EOF > "$output_file"
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e " ${COLBG1}  • CREATE TROJAN USER •    ${NC} "
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
@@ -228,7 +225,6 @@ echo -e "$COLOR1 ${NC} Link GRPC : "
 echo -e "$COLOR1 ${NC} ${trojanlink1}"
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo "" 
-EOF
 ###VTURBOTTRANSAKSINEXUPDATE
 read -n 1 -s -r -p "   Press any key to back on menu"
 menu-trojan

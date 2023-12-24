@@ -206,25 +206,25 @@ trojanlink="trojan://${uuid}@bug.com:${tr}?path=%2Ftrojan-ws&security=tls&host=$
 
 
 clear
-echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" | tee -a ${user}.txt
-echo -e " ${COLBG1}  • CREATE TROJAN USER •    ${NC} " | tee -a ${user}.txt
-echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Remarks     : ${user}"  | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Expired On  : $exp"  | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Host/IP     : ${domain}" | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Port        : ${tr}" | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Key         : ${uuid}" | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Path        : /trojan-ws" | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Path WSS    : wss://bug.com/trojan-ws" | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} ServiceName : trojan-grpc" | tee -a ${user}.txt
-echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Link WS : " | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} ${trojanlink}"  | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} " | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} Link GRPC : " | tee -a ${user}.txt
-echo -e "$COLOR1 ${NC} ${trojanlink1}" | tee -a ${user}.txt
-echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" | tee -a ${user}.txt
-echo "" | tee -a ${user}.txt
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
+echo -e " ${COLBG1}  • CREATE TROJAN USER •    ${NC} " 
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
+echo -e "$COLOR1 ${NC} Remarks     : ${user}"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} Expired On  : $exp"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} Host/IP     : ${domain}"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} Port        : ${tr}"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} Key         : ${uuid}"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} Path        : /trojan-ws"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} Path WSS    : wss://bug.com/trojan-ws"  >> nama_file.txt
+echo -e "$COLOR1 ${NC} ServiceName : trojan-grpc"  >> nama_file.txt
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
+echo -e "$COLOR1 ${NC} Link WS : " 
+echo -e "$COLOR1 ${NC} ${trojanlink}"  
+echo -e "$COLOR1 ${NC} " 
+echo -e "$COLOR1 ${NC} Link GRPC : " 
+echo -e "$COLOR1 ${NC} ${trojanlink1}" 
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
+echo "" 
 ###VTURBOTTRANSAKSINEXUPDATE
 read -n 1 -s -r -p "   Press any key to back on menu"
 menu-trojan

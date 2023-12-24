@@ -207,10 +207,6 @@ trojanlink="trojan://${uuid}@bug.com:${tr}?path=%2Ftrojan-ws&security=tls&host=$
 # Gunakan username sebagai bagian dari nama file
 nama_file="${user}_file.txt"
 
-clear
-echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
-echo -e " ${COLBG1}  • CREATE TROJAN USER •    ${NC} " 
-echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
 echo -e "$COLOR1 ${NC} Remarks     : ${user}"  >> "$nama_file"
 echo -e "$COLOR1 ${NC} Expired On  : $exp"  >> "$nama_file"
 echo -e "$COLOR1 ${NC} Host/IP     : ${domain}"  >> "$nama_file"
@@ -219,6 +215,19 @@ echo -e "$COLOR1 ${NC} Key         : ${uuid}"  >> "$nama_file"
 echo -e "$COLOR1 ${NC} Path        : /trojan-ws"  >> "$nama_file"
 echo -e "$COLOR1 ${NC} Path WSS    : wss://bug.com/trojan-ws"  >> "$nama_file"
 echo -e "$COLOR1 ${NC} ServiceName : trojan-grpc"  >> "$nama_file"
+
+clear
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
+echo -e " ${COLBG1}  • CREATE TROJAN USER •    ${NC} " 
+echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
+echo -e "$COLOR1 ${NC} Remarks     : ${user}"  
+echo -e "$COLOR1 ${NC} Expired On  : $exp"  
+echo -e "$COLOR1 ${NC} Host/IP     : ${domain}" 
+echo -e "$COLOR1 ${NC} Port        : ${tr}"  
+echo -e "$COLOR1 ${NC} Key         : ${uuid}"  
+echo -e "$COLOR1 ${NC} Path        : /trojan-ws" 
+echo -e "$COLOR1 ${NC} Path WSS    : wss://bug.com/trojan-ws"  
+echo -e "$COLOR1 ${NC} ServiceName : trojan-grpc"  
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m" 
 echo -e "$COLOR1 ${NC} Link WS : " 
 echo -e "$COLOR1 ${NC} ${trojanlink}"  

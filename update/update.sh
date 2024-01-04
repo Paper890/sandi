@@ -19,7 +19,6 @@ wget -q -O /usr/bin/menu-dns "https://raw.githubusercontent.com/Paper890/sandi/m
 wget -q -O /usr/bin/info "https://raw.githubusercontent.com/Paper890/sandi/main/update/info.sh" && chmod +x /usr/bin/info
 wget -q -O /usr/bin/mspeed "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-speedtest.sh" && chmod +x /usr/bin/mspeed
 wget -q -O /usr/bin/mbandwith "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-bandwith.sh" && chmod +x /usr/bin/mbandwith
-wget -q -O /usr/bin/udp-custom "https://raw.githubusercontent.com/Paper890/sandi/main/update/udp-custom.sh" && chmod +x /usr/bin/udp-custom
 echo -e " [INFO] Update Successfully"
 sleep 2
 rm -f update.sh

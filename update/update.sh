@@ -19,6 +19,11 @@ wget -q -O /usr/bin/menu-dns "https://raw.githubusercontent.com/Paper890/sandi/m
 wget -q -O /usr/bin/info "https://raw.githubusercontent.com/Paper890/sandi/main/update/info.sh" && chmod +x /usr/bin/info
 wget -q -O /usr/bin/mspeed "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-speedtest.sh" && chmod +x /usr/bin/mspeed
 wget -q -O /usr/bin/mbandwith "https://raw.githubusercontent.com/Paper890/sandi/main/update/menu-bandwith.sh" && chmod +x /usr/bin/mbandwith
+wget -q -O /usr/bin/botssh.sh "https://raw.githubusercontent.com/Paper890/sandi/main/update/botssh.sh" && chmod +x /usr/bin/botssh.sh
+wget -q -O /usr/bin/botvmess.sh "https://raw.githubusercontent.com/Paper890/sandi/main/update/botvmess.sh" && chmod +x /usr/bin/botvmess.sh
+wget -q -O /usr/bin/botvless.sh "https://raw.githubusercontent.com/Paper890/sandi/main/update/botvless.sh" && chmod +x /usr/bin/botvless.sh
+wget -q -O /usr/bin/bottrojan.sh "https://raw.githubusercontent.com/Paper890/sandi/main/update/bottrojan.sh" && chmod +x /usr/bin/bottrojan.sh
+
 echo -e " [INFO] Update Successfully"
 sleep 2
 rm -f update.sh

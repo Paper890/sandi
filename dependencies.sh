@@ -23,7 +23,7 @@ echo "Progress..."
 sleep 2
 
 apt update -y
-apt install python -y
+apt install python3 -y
 apt update -y
 apt dist-upgrade -y
 apt install sudo -y
@@ -35,7 +35,7 @@ apt install -y screen curl jq bzip2 gzip coreutils rsyslog iftop \
 htop zip unzip net-tools sed gnupg gnupg1 \
 bc sudo apt-transport-https build-essential dirmngr libxml-parser-perl neofetch screenfetch git lsof \
 openssl openvpn easy-rsa fail2ban tmux \
-stunnel4 vnstat squid3 \
+stunnel4 vnstat squid \
 dropbear  libsqlite3-dev \
 socat cron bash-completion ntpdate xz-utils sudo apt-transport-https \
 gnupg2 dnsutils lsb-release chrony
